@@ -5,14 +5,12 @@ import com.example.demo.entity.Role;
 import com.example.demo.exception.ExpectedErrorResponseModel;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.util.LoggerUtil;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,13 +43,11 @@ public class RoleService {
 
     public Optional<Role> getRoleByIdWithParsedPermission(Long roleId) {
         Optional<Role> roleOpt = getRoleById(roleId);
-        roleOpt.ifPresent(role -> role.setPermission(stringifyPermission(parsePermission(role.getPermission()))));
         return roleOpt;
     }
 
     public List<Role> getRoleListWithParsedPermission(PaginationDto dto) {
         List<Role> roles = roleRepository.findAllOrderedByIdDesc();
-        roles.forEach(role -> role.setPermission(stringifyPermission(parsePermission(role.getPermission()))));
         return roles;
     }
 
@@ -98,17 +94,6 @@ public class RoleService {
         } catch (IOException e) {
             e.printStackTrace();
             return "";
-        }
-    }
-
-    private List<String> parsePermission(String permissionJson) {
-        // 使用 Jackson 或 Gson 等 JSON 庫將 JSON 字符串解析為 List<String>
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.readValue(permissionJson, new TypeReference<List<String>>() {});
-        } catch (IOException e) {
-            e.printStackTrace();
-            return Collections.emptyList();
         }
     }
 }

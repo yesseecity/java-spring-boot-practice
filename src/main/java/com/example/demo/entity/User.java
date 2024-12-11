@@ -1,32 +1,37 @@
 package com.example.demo.entity;
 
 import com.example.demo.enumeration.BooleanEnum;
+import com.example.demo.enumeration.BooleanEnumConverter;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "user", indexes = {
+@Table(name = "`user`", indexes = {
     @Index(name = "idx_employee_id", columnList = "employee_id")
 })
+@NamedEntityGraph(name = "User.role", attributeNodes = @NamedAttributeNode("role"))
 public class User extends BaseEntity {
 
-    @Column(name = "employee_id", unique = true, nullable = false, columnDefinition = "varchar(255) comment '員編'")
+    @Column(name = "employee_id", unique = true, nullable = false, columnDefinition = "varchar(255)")
     private String employeeId;
 
-    @Column(name = "name", nullable = true, columnDefinition = "nvarchar(255) comment '姓名'")
+    @Column(name = "name", nullable = true, columnDefinition = "nvarchar(255)")
     private String name;
 
-    @Column(name = "email", nullable = true, columnDefinition = "nvarchar(255) comment '信箱'")
+    @Column(name = "email", nullable = true, columnDefinition = "nvarchar(255)")
     private String email;
 
-    @Column(name = "enable_status", nullable = false, columnDefinition = "varchar(255) comment '啟用狀態'")
-    private BooleanEnum enableStatus;
+    @Column(name = "enable_status", nullable = false, columnDefinition = "varchar(255)")
+    private String enableStatus;
+    // @Column(name = "enable_status", nullable = false, columnDefinition = "varchar(255)")
+    // @Convert(converter = BooleanEnumConverter.class)
+    // private BooleanEnum enableStatus;
 
-    @Column(name = "memo", nullable = true, columnDefinition = "ntext comment '備註'")
+    @Column(name = "memo", nullable = true, columnDefinition = "ntext")
     private String memo;
 
-    @Column(name = "last_logged_in", nullable = true, columnDefinition = "datetime2 comment '上次登入時間'")
+    @Column(name = "last_logged_in", nullable = true, columnDefinition = "datetime2")
     private Date lastLoggedIn;
 
     @ManyToOne
@@ -57,11 +62,11 @@ public class User extends BaseEntity {
         this.email = email;
     }
 
-    public BooleanEnum getEnableStatus() {
+    public String getEnableStatus() {
         return enableStatus;
     }
 
-    public void setEnableStatus(BooleanEnum enableStatus) {
+    public void setEnableStatus(String enableStatus) {
         this.enableStatus = enableStatus;
     }
 

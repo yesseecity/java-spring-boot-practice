@@ -9,7 +9,6 @@ import com.example.demo.exception.UnexpectedErrorResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.access.annotation.Secured;
 
 import java.util.List;
 import java.util.Optional;
@@ -112,12 +111,22 @@ public class UserController {
     //     return ResponseEntity.ok(result);
     // }
 
-    // @GetMapping("/{user_id}")
-    // // @Secured("ROLE_USER")
-    // public ResponseEntity<GetUserByIdSuccessResponseModel> getUserById(@PathVariable("user_id") Long userId) {
-    //     Optional<User> result = userService.getUserByIdWithRolePermission(userId);
-    //     return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(400).body(null));
-    // }
+    @ApiOperation("取的使用者資訊")
+    // @ApiResponses({
+    //     @ApiResponse(code=401,message="沒有權限"),
+    //     @ApiResponse(code=404,message="找不到路徑")
+    // })
+    @GetMapping("/{user_id}")
+    // @Secured("ROLE_USER")
+    public ResponseEntity<UserModel> getUserById(@PathVariable("user_id") Long userId) {        
+        Optional<UserModel> result = userService.getUserByIdWithRole(userId);
+        if (result.isPresent()) {
+            loggerUtil.debug(result.toString());
+            return ResponseEntity.ok(result.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     // @GetMapping("/")
     // // @Secured("ROLE_USER")

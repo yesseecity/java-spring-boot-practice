@@ -1,7 +1,11 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.List;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "role", indexes = {
@@ -9,22 +13,15 @@ import javax.persistence.*;
 })
 public class Role extends BaseEntity {
 
-    /**
-     * 角色名稱
-     */
-    @Column(name = "name", nullable = false, unique = true, columnDefinition = "nvarchar(255) comment '角色名稱'")
+    @Column(name = "name", nullable = false, unique = true, columnDefinition = "nvarchar(255)")
     private String name;
 
-    /**
-     * 角色權限
-     */
-    @Column(name = "permission", nullable = false, columnDefinition = "nvarchar(MAX) comment '角色權限'")
+    @Column(name = "permission", nullable = false, columnDefinition = "nvarchar(max)")
     private String permission;
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<User> users;
 
-    // Getters and Setters
     public String getName() {
         return name;
     }
@@ -33,8 +30,15 @@ public class Role extends BaseEntity {
         this.name = name;
     }
 
-    public String getPermission() {
-        return permission;
+    public List<String> getPermission() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<String> list;
+        try {
+            list = objectMapper.readValue(permission, new TypeReference<List<String>>() {});
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to parse permissions", e);
+        }
+        return list;
     }
 
     public void setPermission(String permission) {

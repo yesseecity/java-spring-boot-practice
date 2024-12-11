@@ -3,11 +3,11 @@ package com.example.demo.service;
 import com.example.demo.dto.*;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
-import com.example.demo.enumeration.BooleanEnum;
+// import com.example.demo.enumeration.BooleanEnum;
 import com.example.demo.exception.ExpectedErrorResponseModel;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.util.JwtUtil;
+// import com.example.demo.util.JwtUtil;
 import com.example.demo.util.LoggerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,8 +25,8 @@ public class UserService {
     @Autowired
     private RoleRepository roleRepository;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    // @Autowired
+    // private JwtUtil;
 
     @Autowired
     private LoggerUtil loggerUtil;
@@ -49,7 +49,9 @@ public class UserService {
             userRepository.save(user);
         }
 
-        String jwt = jwtUtil.generateToken(user);
+        // String jwt = jwtUtil.generateToken(user);
+        loggerUtil.debug("login service " + dto.getEmployeeId() + " success");
+        String jwt = "jwtUtil.generateToken(user)";
         return new LoginSuccessResponseModel(jwt);
     }
 
@@ -66,7 +68,7 @@ public class UserService {
 
         User newUser = new User();
         newUser.setEmployeeId(dto.getEmployeeId());
-        newUser.setEnableStatus(BooleanEnum.TRUE);
+        newUser.setEnableStatus("Y");
         newUser.setMemo(dto.getMemo());
         newUser.setRole(role);
 
@@ -131,10 +133,33 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public Optional<User> getUserByIdWithRolePermission(Long id) {
-        loggerUtil.debug("getUserByIdWithRolePermission service " + id);
+    public Optional<UserModel> getUserByIdWithRole(Long id) {
+        loggerUtil.debug("getUserByIdWithRole service " + id);
 
-        return userRepository.findByIdWithRole(id);
+        Optional<User> userOptional = userRepository.findById(id);
+        return userOptional.map(this::convertToDto);
+        
+        // return userRepository.findById(id);
+        // return userRepository.findByIdWithRole(id.intValue());
+        // return userRepository.findByIdAndFetchRoleEagerly(id.intValue());
+    }
+
+    private UserModel convertToDto(User user) {
+        UserModel userModel = new UserModel();
+        userModel.setId(user.getId());
+        userModel.setEmployeeId(user.getEmployeeId());
+        userModel.setName(user.getName());
+        userModel.setEmail(user.getEmail());
+        userModel.setEnableStatus(user.getEnableStatus());
+        userModel.setMemo(user.getMemo());
+        userModel.setLastLoggedIn(user.getLastLoggedIn());
+
+        RoleModel roleModel = new RoleModel();
+        roleModel.setName(user.getRole().getName());
+        roleModel.setPermission(user.getRole().getPermission());
+
+        userModel.setRole(roleModel);
+        return userModel;
     }
 
     public List<User> getUserList(PaginationDto dto) {

@@ -1,6 +1,8 @@
 package com.example.demo.repository;
 
 import com.example.demo.entity.User;
+
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,6 +15,9 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    @EntityGraph(value = "User.role", type = EntityGraph.EntityGraphType.FETCH)
+    Optional<User> findById(Long userId);
+
     @Query("SELECT u FROM User u WHERE u.employeeId = :employeeId")
     Optional<User> findByEmployeeId(@Param("employeeId") String employeeId);
 
@@ -20,7 +25,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByEmployeeIds(@Param("employeeIds") List<String> employeeIds);
 
     @Query("SELECT u FROM User u JOIN FETCH u.role WHERE u.id = :userId")
-    Optional<User> findByIdWithRole(@Param("userId") Long userId);
+    Optional<User> findByIdWithRole(@Param("userId") Integer userId);
 
     @Query("SELECT u FROM User u JOIN FETCH u.role WHERE u.role.permission LIKE %:permission%")
     List<User> findByPermission(@Param("permission") String permission);

@@ -1,17 +1,10 @@
 package com.example.demo.dto;
 
 public class SuccessResponseModel {
-    private boolean success;
+    private final String status = "Success";
 
-    public SuccessResponseModel() {
-        this.success = true;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
+    // Getter 方法
+    public String getStatus() {
+        return status;
     }
 }
