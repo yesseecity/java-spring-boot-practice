@@ -3,9 +3,12 @@ package com.example.demo.entity;
 import com.example.demo.enumeration.BooleanEnum;
 import com.example.demo.enumeration.BooleanEnumConverter;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import jakarta.persistence.*;
 import java.util.Date;
 
+@ApiModel(description = "員工", value = "User")
 @Entity
 @Table(name = "`user`", indexes = {
     @Index(name = "idx_employee_id", columnList = "employee_id")
@@ -13,6 +16,7 @@ import java.util.Date;
 @NamedEntityGraph(name = "User.role", attributeNodes = @NamedAttributeNode("role"))
 public class User extends BaseEntity {
 
+    @ApiModelProperty(value = "員工編號", example = "23456789", required = true)
     @Column(name = "employee_id", unique = true, nullable = false, columnDefinition = "varchar(255)")
     private String employeeId;
 

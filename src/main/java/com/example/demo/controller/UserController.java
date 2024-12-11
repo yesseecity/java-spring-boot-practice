@@ -2,6 +2,13 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
+import com.example.demo.util.LoggerUtil;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 import com.example.demo.dto.*;
 import com.example.demo.entity.*;
 import com.example.demo.exception.ExpectedErrorResponseModel;
@@ -13,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@Api(tags = "User")
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -31,7 +39,11 @@ public class UserController {
     // // @Secured("ROLE_USER")
     // public ResponseEntity<GetUserInfoSuccessResponseModel> getUserInfo(@RequestAttribute("user") JwtPayloadType user) {
     //     Optional<User> result = userService.getUserByIdWithRolePermission(user.getUserId());
-    //     return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(400).body(null));
+    //     return result.map(userEntity -> {
+    //         GetUserInfoSuccessResponseModel responseModel = new GetUserInfoSuccessResponseModel();
+    //         responseModel.setUser(userEntity);
+    //         return ResponseEntity.ok(responseModel);
+    //     }).orElseGet(() -> ResponseEntity.status(400).body(null));
     // }
 
     // @PostMapping("/")
@@ -121,7 +133,6 @@ public class UserController {
     public ResponseEntity<UserModel> getUserById(@PathVariable("user_id") Long userId) {        
         Optional<UserModel> result = userService.getUserByIdWithRole(userId);
         if (result.isPresent()) {
-            loggerUtil.debug(result.toString());
             return ResponseEntity.ok(result.get());
         } else {
             return ResponseEntity.notFound().build();
