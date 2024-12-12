@@ -138,10 +138,6 @@ public class UserService {
 
         Optional<User> userOptional = userRepository.findById(id);
         return userOptional.map(this::convertToDto);
-        
-        // return userRepository.findById(id);
-        // return userRepository.findByIdWithRole(id.intValue());
-        // return userRepository.findByIdAndFetchRoleEagerly(id.intValue());
     }
 
     private UserModel convertToDto(User user) {
@@ -185,4 +181,5 @@ public class UserService {
         // Implement report generation logic here
         return "";
     }
+
 }
