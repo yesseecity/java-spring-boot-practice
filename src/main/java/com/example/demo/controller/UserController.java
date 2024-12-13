@@ -4,10 +4,8 @@ import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
 import com.example.demo.util.LoggerUtil;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.example.demo.dto.*;
 import com.example.demo.entity.*;
@@ -20,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@Api(tags = "User")
+@Tag(name = "User")
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -28,11 +26,24 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Operation(summary = "使用者登入", description = "用戶使用員工ID和密碼進行登入")
     @PostMapping("/login")
     public ResponseEntity<LoginSuccessResponseModel> login(@RequestBody LoginModel body) {
         LoginSuccessResponseModel result = userService.login(body);
         // Set JWT cookie if needed
         return ResponseEntity.ok(result);
+    }
+
+    @Operation(summary = "取的使用者資訊", description = "使用DB流水號取得使用者資訊")
+    @GetMapping("/{user_id}")
+    // @Secured("ROLE_USER")
+    public ResponseEntity<UserModel> getUserById(@PathVariable("user_id") Long userId) {        
+        Optional<UserModel> result = userService.getUserByIdWithRole(userId);
+        if (result.isPresent()) {
+            return ResponseEntity.ok(result.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     // @GetMapping("/info")
@@ -122,22 +133,6 @@ public class UserController {
     //     GetUserListByNameOrEmployeeIdReportSuccessResponseModel result = userService.getUserListByKeywordReport(keyword);
     //     return ResponseEntity.ok(result);
     // }
-
-    @ApiOperation("取的使用者資訊")
-    // @ApiResponses({
-    //     @ApiResponse(code=401,message="沒有權限"),
-    //     @ApiResponse(code=404,message="找不到路徑")
-    // })
-    @GetMapping("/{user_id}")
-    // @Secured("ROLE_USER")
-    public ResponseEntity<UserModel> getUserById(@PathVariable("user_id") Long userId) {        
-        Optional<UserModel> result = userService.getUserByIdWithRole(userId);
-        if (result.isPresent()) {
-            return ResponseEntity.ok(result.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
 
     // @GetMapping("/")
     // // @Secured("ROLE_USER")
