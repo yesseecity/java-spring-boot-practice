@@ -1,33 +1,23 @@
 package com.example.demo.dto;
 
-public class AdResponse {
 
-    private String name;
-    private String mail;
+public class AdResponse {
+    private UserModel user;
 
     // Constructors
     public AdResponse() {
     }
 
-    public AdResponse(String name, String mail) {
-        this.name = name;
-        this.mail = mail;
+    public AdResponse(UserModel user) {
+        this.user = user;
     }
 
     // Getters and Setters
-    public String getName() {
-        return name;
+    public UserModel getUser() {
+        return user;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getMail() {
-        return mail;
-    }
-
-    public void setMail(String mail) {
-        this.mail = mail;
+    public void setUser(UserModel user) {
+        this.user = user;
     }
 }

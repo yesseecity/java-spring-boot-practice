@@ -3,7 +3,7 @@ package com.example.demo.dto;
 import java.util.Date;
 
 public class UserModel {
-    private Long id;
+    private Integer id;
     private String employeeId;
     private String name;
     private String email;
@@ -12,8 +12,8 @@ public class UserModel {
     private Date lastLoggedIn;
     private RoleModel role;
 
-    // public UserModel(Long id, String employeeId, String name, String email, BooleanEnum enableStatus, String memo, Date lastLoggedIn) {
-    //     this.id = id.longValue();
+    // public UserModel(Integer id, String employeeId, String name, String email, BooleanEnum enableStatus, String memo, Date lastLoggedIn) {
+    //     this.id = id.IntegerValue();
     //     this.employeeId = employeeId;
     //     this.name = name;
     //     this.email = email;
@@ -23,12 +23,12 @@ public class UserModel {
     // }
 
     // Getters and Setters
-    public Long getId() {
-        return id.longValue();
+    public Integer getId() {
+        return id;
     }
 
-    public void setId(Long id) {
-        this.id = id.longValue();
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getEmployeeId() {

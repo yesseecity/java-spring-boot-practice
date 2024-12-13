@@ -55,7 +55,7 @@ public class RoleService {
     public Role updateRole(UpdateRoleRepositoryDto dto) {
         loggerUtil.debug("updateRole service " + dto.getRole().getId());
 
-        Role role = roleRepository.findById(dto.getRole().getId())
+        Role role = roleRepository.findById(dto.getRole().getId().longValue())
                 .orElseThrow(() -> new ExpectedErrorResponseModel("D060"));
 
         if (dto.getUpdateRoleData().getName() != null) {

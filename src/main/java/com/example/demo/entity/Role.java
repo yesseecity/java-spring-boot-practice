@@ -11,6 +11,11 @@ import jakarta.persistence.*;
 @Table(name = "role", indexes = {
     @Index(name = "idx_role_name", columnList = "name")
 })
+@NamedEntityGraph(name = "Role", attributeNodes = {
+    @NamedAttributeNode("id"),
+    @NamedAttributeNode("name"),
+    @NamedAttributeNode("permission")
+})
 public class Role extends BaseEntity {
 
     @Column(name = "name", nullable = false, unique = true, columnDefinition = "nvarchar(255)")
@@ -19,7 +24,7 @@ public class Role extends BaseEntity {
     @Column(name = "permission", nullable = false, columnDefinition = "nvarchar(max)")
     private String permission;
 
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = false, fetch = FetchType.LAZY)
     private List<User> users;
 
     public String getName() {
@@ -49,5 +54,15 @@ public class Role extends BaseEntity {
     }
     public void setUsers(List<User> users) {
         this.users = users;
+    }
+
+    @Override
+    public String toString() {
+        return "\nRole{" + "\n"+
+                "  id:" + getId() + ",\n"+
+                "  name:'" + name + '\'' + ",\n"+
+                "  permission:" + permission + ",\n"+
+                "  users:" + users.toString() + "\n"+
+                '}';
     }
 }

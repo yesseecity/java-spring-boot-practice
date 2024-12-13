@@ -13,10 +13,20 @@ import java.util.Date;
 @Table(name = "`user`", indexes = {
     @Index(name = "idx_employee_id", columnList = "employee_id")
 })
-@NamedEntityGraph(name = "User.role", attributeNodes = @NamedAttributeNode("role"))
+@NamedEntityGraph(name = "User.role",
+    attributeNodes = {
+        @NamedAttributeNode(value = "role", subgraph = "Role.noUsers"),
+    },
+    subgraphs = {
+        @NamedSubgraph(name = "Role.noUsers", attributeNodes = {
+            @NamedAttributeNode("id"),
+            @NamedAttributeNode("name"),
+            @NamedAttributeNode("permission")
+        })
+    }
+)
 public class User extends BaseEntity {
-
-    @ApiModelProperty(value = "員工編號", example = "23456789", required = true)
+    
     @Column(name = "employee_id", unique = true, nullable = false, columnDefinition = "varchar(255)")
     private String employeeId;
 
@@ -28,17 +38,13 @@ public class User extends BaseEntity {
 
     @Column(name = "enable_status", nullable = false, columnDefinition = "varchar(255)")
     private String enableStatus;
-    // @Column(name = "enable_status", nullable = false, columnDefinition = "varchar(255)")
-    // @Convert(converter = BooleanEnumConverter.class)
-    // private BooleanEnum enableStatus;
-
     @Column(name = "memo", nullable = true, columnDefinition = "ntext")
     private String memo;
 
     @Column(name = "last_logged_in", nullable = true, columnDefinition = "datetime2")
     private Date lastLoggedIn;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 

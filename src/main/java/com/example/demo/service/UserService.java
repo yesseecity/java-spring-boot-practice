@@ -97,7 +97,7 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(Long userId) {
+    public void deleteUser(Integer userId) {
         loggerUtil.debug("deleteUser service " + userId);
 
         User user = userRepository.findById(userId)
@@ -127,13 +127,14 @@ public class UserService {
         return response;
     }
 
-    public Optional<User> getUserById(Long id) {
+    public Optional<User> getUserById(Integer id) {
         loggerUtil.debug("getUserById service " + id);
 
         return userRepository.findById(id);
     }
 
     public Optional<UserModel> getUserByIdWithRole(Long id) {
+    public Optional<UserModel> getUserByIdWithRole(Integer id) {
         loggerUtil.debug("getUserByIdWithRole service " + id);
 
         Optional<User> userOptional = userRepository.findById(id);

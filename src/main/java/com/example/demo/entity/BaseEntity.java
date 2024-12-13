@@ -33,8 +33,8 @@ public abstract class BaseEntity {
     }
 
     // Getters and Setters
-    public Long getId() {
-        return id.longValue();
+    public Integer getId() {
+        return id;
     }
 
     public void setId(Integer id) {
